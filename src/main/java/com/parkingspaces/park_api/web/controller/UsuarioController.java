@@ -1,7 +1,7 @@
-package com.parkingspaces.web.controller;
+package com.parkingspaces.park_api.web.controller;
 
 import com.parkingspaces.park_api.entity.Usuario;
-import com.parkingspaces.service.UsuarioService;
+import com.parkingspaces.park_api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.parkingspaces.service;
+package com.parkingspaces.park_api.service;
 
 import com.parkingspaces.park_api.entity.Usuario;
 import com.parkingspaces.park_api.repository.UsuarioRepository;
