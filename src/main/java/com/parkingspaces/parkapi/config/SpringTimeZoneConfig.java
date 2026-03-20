@@ -1,4 +1,4 @@
-package com.parkingspaces.park_api.config;
+package com.parkingspaces.parkapi.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;

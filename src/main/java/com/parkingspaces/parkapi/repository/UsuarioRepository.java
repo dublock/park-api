@@ -1,6 +1,6 @@
-package com.parkingspaces.park_api.repository;
+package com.parkingspaces.parkapi.repository;
 
-import com.parkingspaces.park_api.entity.Usuario;
+import com.parkingspaces.parkapi.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {

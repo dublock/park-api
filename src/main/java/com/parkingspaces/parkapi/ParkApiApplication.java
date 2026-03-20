@@ -1,4 +1,4 @@
-package com.parkingspaces.park_api;
+package com.parkingspaces.parkapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

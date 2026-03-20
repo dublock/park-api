@@ -1,7 +1,7 @@
-package com.parkingspaces.park_api.service;
+package com.parkingspaces.parkapi.service;
 
-import com.parkingspaces.park_api.entity.Usuario;
-import com.parkingspaces.park_api.repository.UsuarioRepository;
+import com.parkingspaces.parkapi.entity.Usuario;
+import com.parkingspaces.parkapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

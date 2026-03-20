@@ -1,4 +1,4 @@
-package com.parkingspaces.park_api.entity;
+package com.parkingspaces.parkapi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,7 +26,7 @@ public class Usuario implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name="role", nullable = false, length = 25)
-    private Role role;
+    private Role role = Role.ROLE_CLIENTE;
 
     @Column(name="data_criacao")
     private LocalDateTime dataCriacao;

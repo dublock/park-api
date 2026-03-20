@@ -1,7 +1,10 @@
-package com.parkingspaces.park_api.web.controller;
+package com.parkingspaces.parkapi.web.controller;
 
-import com.parkingspaces.park_api.entity.Usuario;
-import com.parkingspaces.park_api.service.UsuarioService;
+import com.parkingspaces.parkapi.entity.Usuario;
+import com.parkingspaces.parkapi.service.UsuarioService;
+import com.parkingspaces.parkapi.web.dto.UsuarioCreateDto;
+import com.parkingspaces.parkapi.web.dto.UsuarioResponseDto;
+import com.parkingspaces.parkapi.web.dto.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +32,9 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario) {
-        Usuario user = usuarioService.salvar(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioCreateDto usuarioDto) {
+        Usuario user = usuarioService.salvar(UsuarioMapper.toUSuario(usuarioDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDto(user));
     }
 
     @PatchMapping("/{id}")

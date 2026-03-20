@@ -1,4 +1,4 @@
-package com.parkingspaces.park_api;
+package com.parkingspaces.parkapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
