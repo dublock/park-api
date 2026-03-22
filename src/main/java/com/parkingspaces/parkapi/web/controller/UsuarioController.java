@@ -6,6 +6,7 @@ import com.parkingspaces.parkapi.web.dto.UsuarioCreateDto;
 import com.parkingspaces.parkapi.web.dto.UsuarioResponseDto;
 import com.parkingspaces.parkapi.web.dto.UsuarioSenhaDto;
 import com.parkingspaces.parkapi.web.dto.mapper.UsuarioMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioCreateDto usuarioDto) {
+    public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto usuarioDto) {
         Usuario user = usuarioService.salvar(UsuarioMapper.toUSuario(usuarioDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDto(user));
     }
