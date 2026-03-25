@@ -1,6 +1,8 @@
 package com.parkingspaces.parkapi.service;
 
 import com.parkingspaces.parkapi.entity.Usuario;
+import com.parkingspaces.parkapi.exception.EntityNotFoundException;
+import com.parkingspaces.parkapi.exception.PasswordInvalidException;
 import com.parkingspaces.parkapi.exception.UsernameUniqueViolationException;
 import com.parkingspaces.parkapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,24 +32,24 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Usuário com id %d não encontrado", id)));
     }
 
-    @Transactional()
+    @Transactional
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         if (!novaSenha.equals(confirmaSenha)) {
-            throw new RuntimeException("A nova senha e a confirmação de senha não coincidem.");
+            throw new PasswordInvalidException("Nova senha não confere com confirmação de senha.");
         }
 
         Usuario user = buscarPorId(id);
-
         if (!user.getPassword().equals(senhaAtual)) {
-            throw new RuntimeException("Sua senha não confere");
+            throw new PasswordInvalidException("Sua senha não confere.");
         }
 
         user.setPassword(novaSenha);
         return user;
     }
+
 
     @Transactional(readOnly = true)
     public List<Usuario> buscarTodos() {
