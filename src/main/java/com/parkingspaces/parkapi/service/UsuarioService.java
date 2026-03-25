@@ -1,10 +1,13 @@
 package com.parkingspaces.parkapi.service;
 
 import com.parkingspaces.parkapi.entity.Usuario;
+import com.parkingspaces.parkapi.exception.UsernameUniqueViolationException;
 import com.parkingspaces.parkapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -16,7 +19,12 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+
+        try {
+             return usuarioRepository.save(usuario);
+        } catch (Exception ex) {
+            throw new UsernameUniqueViolationException(String.format("Username '%s' já cadastrado", usuario.getUsername()));
+        }
     }
 
     @Transactional(readOnly = true)
