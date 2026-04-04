@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class UsuarioResponseDto {
 
-    private String id;
+    private Long id;
     private String username;
     private String role;
 }

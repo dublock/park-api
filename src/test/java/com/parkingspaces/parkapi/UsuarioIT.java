@@ -4,6 +4,7 @@ import com.parkingspaces.parkapi.web.dto.UsuarioCreateDto;
 import com.parkingspaces.parkapi.web.dto.UsuarioResponseDto;
 
 
+import com.parkingspaces.parkapi.web.dto.UsuarioSenhaDto;
 import com.parkingspaces.parkapi.web.exception.ErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -152,8 +153,133 @@ public class UsuarioIT {
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(409);
     }
 
+    @Test
+    public void buscarUsuario_ComIdExistente_RetornarUsuarioComStatus200() {
+        UsuarioResponseDto responseBody = testClient
+                .get()
+                .uri("/api/v1/usuarios/100")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UsuarioResponseDto.class)
+                .returnResult().getResponseBody();
 
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getId()).isEqualTo(100);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getUsername()).isEqualTo("ana@email.com");
+        org.assertj.core.api.Assertions.assertThat(responseBody.getRole()).isEqualTo("ADMIN");
+    }
 
+    @Test
+    public void buscarUsuario_ComIdInexistente_RetornarUsuarioComStatus404() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/usuarios/0")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
 
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+    }
+
+    @Test
+    public void editarSenha_ComDadosValidos_RetornarStatus204() {
+        testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("123456", "123456", "123456"))
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    public void editarSenha_ComIdInexistente_RetornarUsuarioComStatus404() {
+        ErrorMessage responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/0")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("123456", "123456", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+    }
+
+    @Test
+    public void editarSenha_ComCamposInvaldos_ErroMessageComStatus422() {
+        ErrorMessage responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("", "", ""))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("123456", "12345", "12345"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("123456", "12345467", "1234567"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+    }
+
+    @Test
+    public void editarSenha_ComSenhasInvalidas_ErroMessageComStatus400() {
+        ErrorMessage responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("123456", "123452", "1234577"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("000000", "123446", "123446"))
+                .exchange()
+                .expectStatus().isEqualTo(400)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
+
+    }
 
 }
