@@ -25,14 +25,14 @@ public class JwtAuthorizantionFilter extends OncePerRequestFilter {
 
         final String token = request.getHeader(JwtUtils.JWT_AUTHORIZATION);
 
-        if (token == null || token.startsWith(JwtUtils.JWT_BEARER)) {
-            log.info("Token de autorização ausente ou mal formatado. Ignorando autenticação para a requisição: {}", request.getRequestURI());
+        if (token == null || !token.startsWith(JwtUtils.JWT_BEARER)) {
+            log.info("JWT Token está nulo, vazio ou não iniciado com 'Bearer '.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        if(!JwtUtils.isTokenValid(token)) {
-            log.warn("Jwt token está inválido ou expirado. Requisição: {}", request.getRequestURI());
+        if (!JwtUtils.isTokenValid(token)) {
+            log.warn("JWT Token está inválido ou expirado.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -42,13 +42,13 @@ public class JwtAuthorizantionFilter extends OncePerRequestFilter {
         toAuthentication(request, username);
 
         filterChain.doFilter(request, response);
-
     }
 
     private void toAuthentication(HttpServletRequest request, String username) {
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
 
-        UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken
+                .authenticated(userDetails, null, userDetails.getAuthorities());
 
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
