@@ -5,7 +5,6 @@ import com.parkingspaces.parkapi.exception.PasswordInvalidException;
 import com.parkingspaces.parkapi.exception.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.expression.AccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
