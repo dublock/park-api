@@ -1,5 +1,6 @@
 package com.parkingspaces.parkapi.config;
 
+import com.parkingspaces.parkapi.jwt.JwtAuthenticationEntryPoint;
 import com.parkingspaces.parkapi.jwt.JwtAuthorizantionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,10 @@ public class SpringSecurityConfig {
                         .anyRequest().authenticated()
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                ).addFilterBefore(jwtAuthorizantionFilter(), UsernamePasswordAuthenticationFilter.class)
+                ).addFilterBefore(jwtAuthorizantionFilter(), UsernamePasswordAuthenticationFilter.class
+                ).exceptionHandling(
+                        exception -> exception.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                )
                 .build();
     }
 
