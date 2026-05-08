@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,10 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @Operation(summary = "Obter detalhes de um usuário por ID", description = "Endpoint para obter os detalhes de um usuário específico usando seu ID. Retorna um objeto JSON com as informações do usuário.",
+            security = @SecurityRequirement(name = "security"),
             responses = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar esse recurso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @GetMapping("/{id}")
@@ -42,9 +45,10 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Obter uma lista de todos os usuários", description = "Endpoint para obter uma lista de todos os usuários registrados no sistema. Retorna um array JSON contendo os detalhes de cada usuário.",
+            security = @SecurityRequirement(name = "security"),
             responses = {
             @ApiResponse(responseCode = "200", description = "Lista de usuários obtida com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
-            })
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar esse recurso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),})
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponseDto>>getAll() {
@@ -65,9 +69,11 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Atualizar a senha de um usuário", description = "Endpoint para atualizar a senha de um usuário específico. Requer o ID do usuário e um objeto JSON contendo a senha atual, nova senha e confirmação da nova senha.",
+            security = @SecurityRequirement(name = "security"),
             responses = {
             @ApiResponse(responseCode = "204", description = "Senha atualizada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida, dados de entrada incorretos ou senhas não coincidem", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar esse recurso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "422", description = "Recurso não processado por dados de entrada inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             })
     @PatchMapping("/{id}")
